@@ -15,6 +15,10 @@ We follow three main steps:
 3.  **Train/Test splitting per experiment and virus-wise dataset assembly**
     * Outputs saved under: `Datasets/`
     * Labels stored in: `final_all_labels.csv`
+4.  **Machine Learning Analysis Script (
+run_ml_analysis_v2.py
+)
+**
 
 ---
 
@@ -102,3 +106,60 @@ All class labels used in the paper are provided in the root directory:
 This file contains the ground-truth labels required for:
 * **Infection prediction** (infected vs non-infected)
 * **Symptom prediction** (symptomatic vs non-symptomatic; according to the paper’s definition)
+
+
+
+# Machine Learning Analysis Script (`run_ml_analysis_v2.py`)
+
+This script performs machine learning analysis on viral infection data. It supports various classifiers, feature sets, and optional feature selection filtering.
+
+## Usage
+
+Run the script from the command line using the following parameters:
+
+```bash
+python run_ml_analysis_v2.py [OPTIONS]
+```
+
+### Parameters
+
+| Argument | Description | Options | Default |
+| :--- | :--- | :--- | :--- |
+| `--virus` | Specify the virus type to analyze. | `H1N1`, `H3N2`, `HRV`, `RSV`, `ALL` | `ALL` |
+| `--feature` | Specify the feature set (representation) to use. | `Probe`, `ssGSEA`, `Combined`, `ALL` | `ALL` |
+| `--classifier` | Specify the machine learning classifier. | `LR`, `XGB`, `SVM`, `KNN`, `NuSVC`, `GNB`, `RF`, `ALL` | `ALL` |
+| `--target` | Specify the target variable (Label). | `SC1` (Infection), `SC2` (Symptoms), `ALL` | `SC1` |
+| `--tp` | Specify the timepoint (hours post-inoculation). | `0`, `24`, `48`, `72`, `96`, `120`, `ALL` | `ALL` |
+| `--fs` | Apply Feature Selection filtering. Must match a method name in your FS results CSV. | Any string (e.g., `lasso`, `RF*`, `ttest`) | `None` (Baseline) |
+| `--seed` | Set the random seed for reproducibility. | Integer | `42` |
+
+### Examples
+
+**1. Run Baseline Analysis (No Feature Selection)**
+Run Random Forest on H1N1 data using Combined features for all timepoints, predicting Infection (SC1).
+```bash
+python run_ml_analysis_v2.py --virus H1N1 --feature Combined --classifier RF --target SC1
+```
+
+**2. Run Feature Selection Analysis**
+Apply 'lasso' feature selection. The script will look up the selected features for each combination in `filtered_FS_results.csv` and filter the data accordingly.
+```bash
+python run_ml_analysis_v2.py --virus H1N1 --feature Combined --classifier RF --target SC1 --fs lasso
+```
+
+**3. Run Specific Timepoint**
+Analyze only T96 with Support Vector Machine.
+```bash
+python run_ml_analysis_v2.py --tp 96 --classifier SVM --target SC2
+```
+
+**4. Run All Configurations**
+Run all viruses, all features, all classifiers, and all timepoints (Computationally intensive).
+```bash
+python run_ml_analysis_v2.py --virus ALL --feature ALL --classifier ALL --target ALL --tp ALL
+```
+
+### Output
+Results are saved in the `Results_PP` directory:
+- **Prediction Probabilities**: `[Time]_[Classifier]_[Feature]_[Target]_[FSMethod]_PP.csv`
+- **Summary Metrics**: `Summary_Analysis_[Classifier]_[Feature]_[Target]_[FSMethod].csv` containing Accuracy, AUPRC, AP, ROC AUC, and Confusion Matrix metrics (TP, TN, FP, FN).
