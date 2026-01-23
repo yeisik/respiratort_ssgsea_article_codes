@@ -106,10 +106,9 @@ All class labels used in the paper are provided in the root directory:
 This file contains the ground-truth labels required for:
 * **Infection prediction** (infected vs non-infected)
 * **Symptom prediction** (symptomatic vs non-symptomatic; according to the paper’s definition)
+```
 
-
-
-# Machine Learning Analysis Script (`run_ml_analysis_v2.py`)
+#4. Machine Learning Analysis Script (`run_ml_analysis_v2.py`)
 
 This script performs machine learning analysis on viral infection data. It supports various classifiers, feature sets, and optional feature selection filtering.
 
@@ -119,7 +118,7 @@ Run the script from the command line using the following parameters:
 
 ```bash
 python run_ml_analysis_v2.py [OPTIONS]
-```
+
 
 ### Parameters
 
