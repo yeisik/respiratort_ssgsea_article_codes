@@ -153,7 +153,7 @@ python run_ml_analysis_v2.py --tp 96 --classifier SVM --target SC2
 ```
 
 **4. Run All Configurations**
-Run all viruses, all features, all classifiers, and all timepoints (Computationally intensive).
+Run all viruses, all features, all classifiers, and all timepoints.
 ```bash
 python run_ml_analysis_v2.py --virus ALL --feature ALL --classifier ALL --target ALL --tp ALL
 ```
